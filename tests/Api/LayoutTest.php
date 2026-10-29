@@ -12,7 +12,7 @@ final class LayoutTest extends TestCase
     public function testDarstellungSetztBeideVorlagenUndBildgroesse(): void
     {
         $this->assertSame(
-            ['cal_template' => 'event_jetro_list', 'customTpl' => 'mod_eventlist_jetro_list', 'imgSize' => serialize(['176', '176', 'crop'])],
+            ['cal_template' => 'event_jetro_list', 'customTpl' => 'mod_eventlist_jetro_list', 'cal_noSpan' => '1', 'imgSize' => serialize(['176', '176', 'crop'])],
             LayoutListener::fieldsFor('list', ['cal_template' => 'event_list', 'customTpl' => '', 'imgSize' => serialize(['', '', ''])]),
         );
     }
