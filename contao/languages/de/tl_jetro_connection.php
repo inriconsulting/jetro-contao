@@ -25,3 +25,5 @@ $GLOBALS['TL_LANG']['tl_jetro_connection']['token_created'] = 'Das Token wurde e
 $GLOBALS['TL_LANG']['tl_jetro_connection']['token_label'] = 'Token für Jetro';
 $GLOBALS['TL_LANG']['tl_jetro_connection']['token_once'] = 'Jetzt kopieren und in Jetro unter Einstellungen → Website eintragen. Contao zeigt das Token nur dieses eine Mal an; verloren gegangen? Einfach hier ein neues erzeugen.';
 $GLOBALS['TL_LANG']['tl_jetro_connection']['token_revoked'] = 'Das Token wurde widerrufen.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['display_legend'] = 'Anzeige';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['showCredit'] = ['Zeile „Termine aus Jetro“ zeigen', 'Erscheint klein unter Terminlisten mit Terminen dieser Verbindung.'];

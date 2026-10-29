@@ -27,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_jetro_connection'] = [
         ],
     ],
     'palettes' => [
-        'default' => '{title_legend},title;{calendar_legend},defaultCalendar',
+        'default' => '{title_legend},title;{calendar_legend},defaultCalendar;{display_legend},showCredit',
     ],
     'fields' => [
         'id' => ['sql' => ['type' => 'integer', 'unsigned' => true, 'autoincrement' => true]],
@@ -44,6 +44,11 @@ $GLOBALS['TL_DCA']['tl_jetro_connection'] = [
             'eval' => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0],
             'relation' => ['type' => 'hasOne', 'load' => 'lazy'],
+        ],
+        'showCredit' => [
+            'inputType' => 'checkbox',
+            'eval' => ['tl_class' => 'w50 m12'],
+            'sql' => ['type' => 'boolean', 'default' => true],
         ],
         'tokenHash' => ['eval' => ['doNotCopy' => true, 'doNotShow' => true], 'sql' => ['type' => 'string', 'length' => 64, 'default' => '']],
         'tokenCreated' => ['eval' => ['doNotCopy' => true, 'rgxp' => 'datim'], 'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0]],

@@ -43,7 +43,7 @@ abstract class ApiTestCase extends TestCase
             "CREATE TABLE tl_calendar_events (id INTEGER PRIMARY KEY, pid INTEGER, tstamp INTEGER DEFAULT 0, title TEXT DEFAULT '', alias TEXT DEFAULT '', addTime INTEGER DEFAULT 0, startTime INTEGER DEFAULT 0, endTime INTEGER DEFAULT 0, startDate INTEGER DEFAULT 0, endDate INTEGER NULL, location TEXT DEFAULT '', address TEXT NULL, teaser TEXT NULL, addImage INTEGER DEFAULT 0, singleSRC BLOB NULL, published INTEGER DEFAULT 0, featured INTEGER DEFAULT 0, jetroConnection INTEGER DEFAULT 0, jetroId TEXT NULL UNIQUE, jetroCancelled INTEGER DEFAULT 0)",
             'CREATE TABLE tl_content (id INTEGER PRIMARY KEY, pid INTEGER, ptable TEXT)',
             'CREATE TABLE tl_calendar_events_member (id INTEGER PRIMARY KEY, pid INTEGER)',
-            "CREATE TABLE tl_jetro_connection (id INTEGER PRIMARY KEY, tstamp INTEGER DEFAULT 0, title TEXT DEFAULT '', tokenHash TEXT DEFAULT '', tokenCreated INTEGER DEFAULT 0, defaultCalendar INTEGER DEFAULT 0)",
+            "CREATE TABLE tl_jetro_connection (id INTEGER PRIMARY KEY, tstamp INTEGER DEFAULT 0, title TEXT DEFAULT '', tokenHash TEXT DEFAULT '', tokenCreated INTEGER DEFAULT 0, defaultCalendar INTEGER DEFAULT 0, showCredit INTEGER DEFAULT 1)",
             "CREATE TABLE tl_jetro_calendar (id INTEGER PRIMARY KEY, pid INTEGER, tstamp INTEGER DEFAULT 0, jetroKey TEXT DEFAULT '', calendar INTEGER DEFAULT 0)",
             "CREATE TABLE tl_jetro_media (id INTEGER PRIMARY KEY, pid INTEGER, tstamp INTEGER DEFAULT 0, jetroId TEXT NULL UNIQUE, uuid BLOB NULL)",
             "CREATE TABLE tl_jetro_log (id INTEGER PRIMARY KEY, pid INTEGER DEFAULT 0, tstamp INTEGER DEFAULT 0, method TEXT DEFAULT '', path TEXT DEFAULT '', status INTEGER DEFAULT 0, code TEXT DEFAULT '')",

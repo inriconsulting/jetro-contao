@@ -14,5 +14,4 @@ $this->extend('block_unsearchable');
     <button type="button" class="jetro-cards__nav jetro-cards__nav--next" aria-label="<?= $jetroLabel('next') ?>" hidden>&#8250;</button>
   </div>
   <?= $this->pagination ?>
-  <p class="jetro-cards__credit"><?= $jetroLabel('credit') ?> <a href="https://jetro.tools" target="_blank" rel="noopener">Jetro.tools</a></p>
 <?php $this->endblock(); ?>

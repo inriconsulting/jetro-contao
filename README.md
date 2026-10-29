@@ -71,3 +71,6 @@ Farben passen sich über CSS-Variablen an das eigene Design an, z. B.:
 
 Weitere Variablen: `--jetro-sheet-text`, `--jetro-card-bg`, `--jetro-text`, `--jetro-muted`, `--jetro-card-width`.
 Abgesagte Termine tragen die Klasse `jetro-cancelled`.
+
+Unter jeder Terminliste mit Jetro-Terminen steht klein „Termine aus Jetro“ (Link mit `rel="nofollow"`).
+Abschalten lässt sich die Zeile je Verbindung unter **Anzeige**.

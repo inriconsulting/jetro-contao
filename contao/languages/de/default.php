@@ -6,4 +6,4 @@ $GLOBALS['TL_LANG']['MSC']['jetro_signup'] = 'Zur Anmeldung';
 $GLOBALS['TL_LANG']['MSC']['jetro_cards_label'] = 'Nächste Termine';
 $GLOBALS['TL_LANG']['MSC']['jetro_cards_prev'] = 'Vorherige Termine';
 $GLOBALS['TL_LANG']['MSC']['jetro_cards_next'] = 'Weitere Termine';
-$GLOBALS['TL_LANG']['MSC']['jetro_cards_credit'] = 'Termine aus';
+$GLOBALS['TL_LANG']['MSC']['jetro_credit'] = 'Termine aus %s';

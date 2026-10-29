@@ -25,3 +25,5 @@ $GLOBALS['TL_LANG']['tl_jetro_connection']['token_created'] = 'The token has bee
 $GLOBALS['TL_LANG']['tl_jetro_connection']['token_label'] = 'Token for Jetro';
 $GLOBALS['TL_LANG']['tl_jetro_connection']['token_once'] = 'Copy it now and enter it in Jetro under Settings → Website. Contao shows the token only once; lost it? Simply create a new one here.';
 $GLOBALS['TL_LANG']['tl_jetro_connection']['token_revoked'] = 'The token has been revoked.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['display_legend'] = 'Display';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['showCredit'] = ['Show "Events from Jetro"', 'Appears in small print below event lists with events of this connection.'];

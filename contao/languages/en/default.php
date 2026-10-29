@@ -6,4 +6,4 @@ $GLOBALS['TL_LANG']['MSC']['jetro_signup'] = 'Sign up';
 $GLOBALS['TL_LANG']['MSC']['jetro_cards_label'] = 'Upcoming events';
 $GLOBALS['TL_LANG']['MSC']['jetro_cards_prev'] = 'Previous events';
 $GLOBALS['TL_LANG']['MSC']['jetro_cards_next'] = 'More events';
-$GLOBALS['TL_LANG']['MSC']['jetro_cards_credit'] = 'Events from';
+$GLOBALS['TL_LANG']['MSC']['jetro_credit'] = 'Events from %s';
