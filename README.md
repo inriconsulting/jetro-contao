@@ -93,5 +93,9 @@ Weitere Variablen: `--jetro-sheet-text`, `--jetro-card-bg`, `--jetro-text`, `--j
 `--jetro-card-width-large`, `--jetro-card-width-compact`. Abgesagte Termine tragen die Klasse `jetro-cancelled`
 und erscheinen ausgegraut mit „Abgesagt:“ vor dem Titel.
 
+Manche Themes bringen für die Leseansicht eine eigene Vorlage mit, die Titel und Bild nur in einem zusätzlichen
+Kopfbereich zeigt. Erscheinen Termine mit Bild dort ohne Überschrift, das Lesemodul auf die Kern-Vorlage
+`event_full` stellen.
+
 Unter jeder Terminliste mit Jetro-Terminen steht klein „Termine aus Jetro“ (Link mit `rel="nofollow"`).
 Abschalten lässt sich die Zeile je Verbindung unter **Anzeige**.
