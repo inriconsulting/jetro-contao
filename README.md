@@ -75,7 +75,9 @@ bedienen und verzichten bei „Bewegung reduzieren“ auf Animationen. Fremde Sk
 ![Kompakte Karten](docs/vorlagen/kompakt-desktop.png)
 ![Liste mit Vorschaubild](docs/vorlagen/liste-desktop.png)
 
-Die Bilder zeigen Musterdaten; Ansichten fürs Handy liegen daneben (`*-mobil.png`).
+Die Bilder zeigen die Testinstallation „Musterkirche“ mit erfundenen Terminen; die Grafiken darin sind für dieses
+Projekt erzeugt und stehen wie die Screenshots unter der MIT-Lizenz des Pakets. Ansichten fürs Handy liegen daneben
+(`*-mobil.png`).
 
 Einrichtung:
 
