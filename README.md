@@ -49,3 +49,25 @@ docker run --rm -v "$PWD":/app jetro-contao-test sh -c 'composer install && vend
 
 Der Vertrag zwischen Jetro und diesem Paket steht in der Jetro-Spezifikation `website-contao.md`
 (Abschnitt „Vertrag Jetro → Paket (api 1)“). Abweichungen nur über eine Änderung dort.
+
+## Termin-Karten (optional)
+
+Das Paket bringt eine Kartenreihe für die Startseite mit: Bild oder Kalenderblatt, Titel, Tag, Zeit, Ort,
+am Desktop mit Pfeilen, auf dem Handy zum Wischen. Sie nutzt das Modul **Terminliste** aus dem Contao-Kern:
+
+1. Frontend-Modul „Terminliste“ anlegen, Kalender wählen, Format z. B. „Nächste 365 Tage“, Sortierung aufsteigend.
+2. **Gesamtzahl der Termine** (`cal_limit`) z. B. 5; **Anzahl der Wiederholungen** größer 0, sonst zeigt Contao
+   jede Serie nur einmal.
+3. **Event-Template** `event_jetro_card`, **Individuelles Template** `mod_eventlist_jetro_cards`, Bildgröße nach Wunsch.
+
+Farben passen sich über CSS-Variablen an das eigene Design an, z. B.:
+
+```css
+.jetro-cards {
+  --jetro-accent: #69bf44;
+  --jetro-sheet: linear-gradient(120deg, #36b3a5, #69bf44 60%, #a3cc00);
+}
+```
+
+Weitere Variablen: `--jetro-sheet-text`, `--jetro-card-bg`, `--jetro-text`, `--jetro-muted`, `--jetro-card-width`.
+Abgesagte Termine tragen die Klasse `jetro-cancelled`.

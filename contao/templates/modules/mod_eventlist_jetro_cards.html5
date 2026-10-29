@@ -1,0 +1,18 @@
+<?php
+$GLOBALS['TL_CSS']['jetro_cards'] = 'bundles/jetrotoolscontao/jetro-cards.css|static';
+$GLOBALS['TL_JAVASCRIPT']['jetro_cards'] = 'bundles/jetrotoolscontao/jetro-cards.js|static';
+$jetroLabel = static fn (string $key): string => $GLOBALS['TL_LANG']['MSC']['jetro_cards_'.$key] ?? '';
+$this->extend('block_unsearchable');
+?>
+
+<?php $this->block('content'); ?>
+  <div class="jetro-cards">
+    <button type="button" class="jetro-cards__nav jetro-cards__nav--prev" aria-label="<?= $jetroLabel('prev') ?>" hidden>&#8249;</button>
+    <div class="jetro-cards__track" tabindex="0" aria-label="<?= $jetroLabel('label') ?>">
+      <?= $this->events ?>
+    </div>
+    <button type="button" class="jetro-cards__nav jetro-cards__nav--next" aria-label="<?= $jetroLabel('next') ?>" hidden>&#8250;</button>
+  </div>
+  <?= $this->pagination ?>
+  <p class="jetro-cards__credit"><?= $jetroLabel('credit') ?> <a href="https://jetro.tools" target="_blank" rel="noopener">Jetro.tools</a></p>
+<?php $this->endblock(); ?>
