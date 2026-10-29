@@ -1,0 +1,9 @@
+<?php use Contao\Date; ?>
+<?php if ($this->addImage && $this->picture && empty($this->jetroNoImage)): ?>
+  <?php $this->insert('picture_default', $this->picture); ?>
+<?php else: ?>
+  <div class="jetro-sheet" aria-hidden="true">
+    <span class="jetro-sheet__day"><?= Date::parse('d', $this->begin ?: $this->startDate) ?></span>
+    <span class="jetro-sheet__month"><?= Date::parse('M', $this->begin ?: $this->startDate) ?></span>
+  </div>
+<?php endif; ?>

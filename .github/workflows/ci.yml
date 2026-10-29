@@ -30,6 +30,6 @@ jobs:
           composer require --no-update "contao/core-bundle:${{ matrix.contao }}" "contao/calendar-bundle:${{ matrix.contao }}"
           composer update --no-interaction --no-progress --prefer-dist
       - name: Syntax
-        run: find src contao -name '*.php' -print0 | xargs -0 -n1 php -l
+        run: find src contao \( -name '*.php' -o -name '*.html5' \) -print0 | xargs -0 -n1 php -l
       - name: PHPUnit
         run: vendor/bin/phpunit

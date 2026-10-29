@@ -1,6 +1,6 @@
-/* Termin-Karten aus dem Jetro-Paket; Farben über die Variablen anpassen.
+/* Termin-Vorlagen aus dem Jetro-Paket; Farben über die Variablen anpassen.
    :where() hält die Vorgaben auf Spezifität 0, damit jede eigene Angabe gewinnt. */
-:where(.jetro-cards) {
+:where(.jetro-cards, .jetro-list) {
   --jetro-accent: #2b6cb0;
   --jetro-sheet: linear-gradient(120deg, #2b6cb0, #4a90d9);
   --jetro-sheet-text: #fff;
@@ -8,7 +8,16 @@
   --jetro-text: #333;
   --jetro-muted: #666;
   --jetro-card-width: 220px;
+  --jetro-card-width-large: 340px;
+  --jetro-card-width-compact: 260px;
 }
+
+/* Kalenderblatt, wenn der Termin kein Bild hat */
+.jetro-sheet { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--jetro-sheet-text); background: var(--jetro-sheet); }
+.jetro-sheet__day { font-size: 2.6rem; font-weight: 700; line-height: 1; }
+.jetro-sheet__month { margin-top: .2rem; font-size: .9rem; letter-spacing: .1em; text-transform: uppercase; }
+
+/* Slider (Karten, große Karten, kompakte Karten) */
 .jetro-cards { position: relative; }
 .jetro-cards__track { display: flex; gap: 16px; padding: 4px 2px 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .jetro-cards__track::-webkit-scrollbar { display: none; }
@@ -17,18 +26,56 @@
 .jetro-card { flex: 0 0 var(--jetro-card-width); scroll-snap-align: start; }
 .jetro-card__link { display: flex; flex-direction: column; height: 100%; color: var(--jetro-text); background: var(--jetro-card-bg); box-shadow: 0 4px 14px rgba(0, 0, 0, .06); text-decoration: none; transition: transform .15s, box-shadow .15s; }
 .jetro-card__link:hover, .jetro-card__link:focus-visible { color: var(--jetro-text); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0, 0, 0, .1); }
+.jetro-card__link:focus-visible { outline: 2px solid var(--jetro-accent); outline-offset: 2px; }
 .jetro-card__media { aspect-ratio: 7 / 4; overflow: hidden; border-bottom: 4px solid var(--jetro-accent); }
-.jetro-card__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.jetro-card__sheet { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--jetro-sheet-text); background: var(--jetro-sheet); }
-.jetro-card__day { font-size: 2.6rem; font-weight: 700; line-height: 1; }
-.jetro-card__month { margin-top: .2rem; font-size: .9rem; letter-spacing: .1em; text-transform: uppercase; }
+.jetro-card__media img, .jetro-list__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.jetro-card__media picture, .jetro-list__media picture { display: contents; }
 .jetro-card__body { padding: 1rem 1.1rem 1.2rem; }
 .jetro-card__title { margin: 0 0 .5rem; color: var(--jetro-accent); font-size: 1.1rem; line-height: 1.3; text-transform: none; overflow-wrap: break-word; }
 .jetro-card__meta { margin: 0 0 .2rem; color: var(--jetro-muted); font-size: .875rem; }
-.jetro-cancelled .jetro-card__title { color: var(--jetro-muted); text-decoration: line-through; }
+.jetro-card__when { margin: 0 0 .35rem; color: var(--jetro-muted); font-size: .9rem; }
+
+.jetro-card--large { flex-basis: var(--jetro-card-width-large); }
+.jetro-card--large .jetro-card__media { aspect-ratio: 16 / 9; }
+.jetro-card--large .jetro-card__title { font-size: 1.35rem; }
+.jetro-card--large .jetro-sheet__day { font-size: 3.4rem; }
+
+.jetro-card--compact { flex-basis: var(--jetro-card-width-compact); }
+.jetro-card--compact .jetro-card__link { flex-direction: row; align-items: stretch; }
+.jetro-card--compact .jetro-card__media { flex: 0 0 72px; aspect-ratio: auto; border-bottom: 0; border-right: 4px solid var(--jetro-accent); }
+.jetro-card--compact .jetro-sheet__day { font-size: 1.6rem; }
+.jetro-card--compact .jetro-sheet__month { font-size: .7rem; }
+.jetro-card--compact .jetro-card__body { padding: .7rem .9rem; }
+.jetro-card--compact .jetro-card__title { margin-bottom: .2rem; font-size: 1rem; }
+
+.jetro-cancelled .jetro-card__title, .jetro-cancelled .jetro-list__title { color: var(--jetro-muted); }
+.jetro-cancelled .jetro-card__media, .jetro-cancelled .jetro-list__media { opacity: .5; }
+
 .jetro-cards__nav { position: absolute; top: calc(50% - 22px); z-index: 2; width: 44px; height: 44px; border: 0; border-radius: 50%; color: #fff; background: var(--jetro-accent); box-shadow: 0 4px 12px rgba(0, 0, 0, .15); font-size: 1.8rem; line-height: 1; cursor: pointer; }
+.jetro-cards__nav:focus-visible { outline: 2px solid var(--jetro-text); outline-offset: 2px; }
 .jetro-cards__nav--prev { left: 6px; }
 .jetro-cards__nav--next { right: 6px; }
 .jetro-cards__nav[hidden] { display: none; }
-@media (max-width: 767px) { .jetro-cards__nav { display: none; } }
-@media (prefers-reduced-motion: reduce) { .jetro-card__link { transition: none; } }
+
+/* Liste mit Vorschaubild */
+.jetro-list { margin: 0; padding: 0; list-style: none; }
+.jetro-list .header { display: none; }
+.jetro-list__item { margin: 0 0 10px; }
+.jetro-list__link { display: flex; gap: 16px; align-items: center; padding: 10px; color: var(--jetro-text); background: var(--jetro-card-bg); text-decoration: none; }
+.jetro-list__link:hover .jetro-list__title { text-decoration: underline; }
+.jetro-list__link:focus-visible { outline: 2px solid var(--jetro-accent); outline-offset: 2px; }
+.jetro-list__media { flex: 0 0 88px; height: 88px; overflow: hidden; }
+.jetro-list__media .jetro-sheet__day { font-size: 1.9rem; }
+.jetro-list__media .jetro-sheet__month { font-size: .75rem; }
+.jetro-list__body { min-width: 0; }
+.jetro-list__title { margin: 0 0 .25rem; color: var(--jetro-accent); font-size: 1.1rem; line-height: 1.3; text-transform: none; overflow-wrap: break-word; }
+.jetro-list__meta { margin: 0; color: var(--jetro-muted); font-size: .9rem; }
+
+@media (max-width: 767px) {
+  .jetro-cards__nav { display: none; }
+  .jetro-card--large { flex-basis: 85%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jetro-card__link { transition: none; }
+  .jetro-card__link:hover, .jetro-card__link:focus-visible { transform: none; }
+}

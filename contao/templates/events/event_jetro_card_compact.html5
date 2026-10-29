@@ -1,0 +1,10 @@
+<?php $this->jetroNoImage = true; ?>
+<div class="jetro-card jetro-card--compact event<?= $this->classList ?><?= $this->class ? ' '.$this->class : '' ?>">
+  <a class="jetro-card__link" href="<?= $this->href ?>"<?= $this->target ?>>
+    <div class="jetro-card__media"><?php $this->insert('jetro_event_media', $this->arrData); ?></div>
+    <div class="jetro-card__body">
+      <h3 class="jetro-card__title"><?= $this->link ?></h3>
+      <p class="jetro-card__meta"><time datetime="<?= $this->datetime ?>"><?= $this->day ?: $this->date ?></time><?php if ($this->time): ?>, <?= $this->time ?><?php endif; ?></p>
+    </div>
+  </a>
+</div>

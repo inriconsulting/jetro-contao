@@ -1,0 +1,11 @@
+<?php
+$GLOBALS['TL_CSS']['jetro_cards'] = 'bundles/jetrotoolscontao/jetro-cards.css|static';
+$this->extend('block_unsearchable');
+?>
+
+<?php $this->block('content'); ?>
+  <ul class="jetro-list">
+    <?= $this->events ?>
+  </ul>
+  <?= $this->pagination ?>
+<?php $this->endblock(); ?>
