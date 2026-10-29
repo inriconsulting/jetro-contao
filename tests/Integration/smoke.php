@@ -41,7 +41,9 @@ $eventId = '0192f3a4-5b6c-7d8e-9f01-23456789abcd';
 $event = $fixture('v2-event');
 
 [$status, $headers, $body] = $request('GET', '/');
-$check(200 === $status && $body === $fixture('v1-index'), 'V1 über die echte Route');
+$v1 = $fixture('v1-index');
+// Paketversion wächst mit jedem Release, Name und api bleiben wie in der Fixture
+$check(200 === $status && $v1['name'] === $body['name'] && $v1['api'] === $body['api'] && preg_match('/^\d+\.\d+\.\d+$/', (string) $body['version']), 'V1 über die echte Route');
 $check(false === stripos($headers, 'set-cookie'), 'keine Session, kein Cookie');
 
 [$status] = $request('PUT', '/media/'.$event['imageId'], $fixture('v4-media'));

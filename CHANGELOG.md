@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 – 2026-10-29
+
+- Homepage, Autor und Support-Links in composer.json (Anzeige auf Packagist)
+
 ## 1.0.0 – 2026-10-29
 
 - Schnittstelle api 1: `GET /`, `PUT|PATCH|DELETE /events/{id}`, `PUT /media/{id}` (Vertrag V1–V7)

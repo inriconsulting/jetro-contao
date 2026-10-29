@@ -2,8 +2,25 @@
     "name": "jetro-tools/contao-bundle",
     "type": "contao-bundle",
     "description": "Jetro: Termine aus Jetro in Contao-Kalender übernehmen",
-    "keywords": ["contao", "jetro", "kalender", "gemeinde"],
+    "keywords": [
+        "contao",
+        "jetro",
+        "kalender",
+        "gemeinde"
+    ],
+    "homepage": "https://www.jetro.tools",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "INRI Management Consulting GmbH",
+            "homepage": "https://www.inri-consulting.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/inriconsulting/jetro-contao/issues",
+        "source": "https://github.com/inriconsulting/jetro-contao"
+    },
     "require": {
         "php": "^8.2",
         "ext-fileinfo": "*",
