@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 – unveröffentlicht
+## 1.0.0 – 2026-10-29
 
 - Schnittstelle api 1: `GET /`, `PUT|PATCH|DELETE /events/{id}`, `PUT /media/{id}` (Vertrag V1–V7)
 - Backend „Jetro“: Verbindungen, Token erzeugen und widerrufen, Standard-Kalender, Kalender-Zuordnung, Protokoll
@@ -12,4 +12,7 @@
 - Bilder bis 6000 × 6000 Pixel, Protokoll 50 Einträge je Verbindung und 10 abgewiesene
 - Token-Felder nicht versioniert, Contao-Framework vor jeder Anfrage initialisiert
 - Tests gegen die Vertrags-Fixtures aus Jetro und Integrationstest mit echtem Contao und MySQL
+- Bilder gehören keiner Verbindung; neue Verbindungen nutzen vorhandene Bilder weiter
+- Kodierung über Contaos Input::encodeInput (encodeAll), auch für ##Simple-Tokens##
+- Kalenderauswahl im Backend nur mit Kalenderrechten des Benutzers
 - Zeile „Termine aus Jetro“ unter Terminlisten mit Jetro-Terminen, je Verbindung abschaltbar

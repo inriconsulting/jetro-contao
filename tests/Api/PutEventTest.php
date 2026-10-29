@@ -72,7 +72,7 @@ final class PutEventTest extends ApiTestCase
 
     public function testTitelDerKodiertZuLangWird422(): void
     {
-        $response = $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['title' => str_repeat('a', 254).'&']));
+        $response = $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['title' => str_repeat('a', 254).'#']));
 
         $this->assertError($response, 422, 'validation');
         $this->assertSame('title', $this->json($response)['field']);
@@ -158,8 +158,30 @@ final class PutEventTest extends ApiTestCase
         $row = $this->event();
         $this->assertStringNotContainsString('<script>', $row['title']);
         $this->assertStringNotContainsString('{{', $row['title']);
-        $this->assertStringContainsString('&lt;script&gt;', $row['title']);
+        $this->assertStringContainsString('&#60;script&#62;', $row['title'], 'wie Input::encodeInput(encodeAll)');
         $this->assertStringNotContainsString('<b>', $row['teaser']);
+    }
+
+    public function testSimpleTokensUndKlammernWieImBackend(): void
+    {
+        $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['title' => '##member_email## (a) = b \\', 'description' => '##member_email##']));
+
+        $row = $this->event();
+        $this->assertSame('&#35;&#35;member_email&#35;&#35; &#40;a&#41; &#61; b &#92;', $row['title']);
+        $this->assertStringNotContainsString('##', $row['teaser']);
+    }
+
+    public function testZuLangeBeschreibung422(): void
+    {
+        $response = $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['description' => str_repeat('a', 70000)]));
+
+        $this->assertError($response, 422, 'validation');
+        $this->assertSame('description', $this->json($response)['field']);
+    }
+
+    public function testPostAufTermin404(): void
+    {
+        $this->assertError($this->call('POST', '/events/'.self::EVENT_ID, $this->fixture()), 404, 'not_found');
     }
 
     public function testKalenderZuordnungUndUmhaengen(): void

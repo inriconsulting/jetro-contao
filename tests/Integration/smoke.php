@@ -60,7 +60,7 @@ $check(str_contains((string) $row['teaser'], 'jetro-signup'), 'Anmeldelink mit B
 [$status] = $request('PUT', '/events/0192f3a4-5b6c-7d8e-9f01-000000000001', ['title' => str_repeat('Wort ', 51)] + $event);
 $check(201 === $status, 'langer Titel: Alias passt in die Spalte');
 
-[$status, , $body] = $request('PUT', '/events/0192f3a4-5b6c-7d8e-9f01-000000000002', ['title' => str_repeat('a', 254).'&'] + $event);
+[$status, , $body] = $request('PUT', '/events/0192f3a4-5b6c-7d8e-9f01-000000000002', ['title' => str_repeat('a', 254).'#'] + $event);
 $check(422 === $status && 'title' === ($body['field'] ?? null), 'kodiert zu langer Titel: 422 statt 500');
 
 foreach (['title', 'location', 'address', 'alias'] as $column) {

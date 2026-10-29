@@ -59,11 +59,34 @@ final class MediaTest extends ApiTestCase
         $this->assertError($this->call('PUT', '/media/'.self::MEDIA_ID, ['filename' => 'x.png', 'mimeType' => 'image/png', 'contentBase64' => '%%%']), 422, 'validation');
     }
 
-    public function testBildEinerAnderenVerbindung409(): void
+    public function testBilderGehoerenKeinerVerbindung(): void
     {
         $body = ['filename' => 'bild.png', 'mimeType' => 'image/png', 'contentBase64' => base64_encode(self::png())];
-        $this->call('PUT', '/media/'.self::MEDIA_ID, $body, ['HTTP_X_JETRO_TOKEN' => self::OTHER_TOKEN]);
+        $this->assertSame(201, $this->call('PUT', '/media/'.self::MEDIA_ID, $body, ['HTTP_X_JETRO_TOKEN' => self::OTHER_TOKEN])->getStatusCode());
 
-        $this->assertError($this->call('PUT', '/media/'.self::MEDIA_ID, $body), 409, 'foreign');
+        // Verbindung B (neu angelegt) nutzt das Bild von A per PUT /media und per imageId
+        $this->assertSame(200, $this->call('PUT', '/media/'.self::MEDIA_ID, $body)->getStatusCode());
+        $this->assertCount(1, $this->media->files, 'keine neue Datei');
+        $this->assertSame(201, $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['imageId' => self::MEDIA_ID]))->getStatusCode());
+        $this->assertSame(1, (int) $this->event()['addImage']);
+    }
+
+    public function testInContaoGeloeschteDateiWirdNeuAbgelegt(): void
+    {
+        $body = ['filename' => 'bild.png', 'mimeType' => 'image/png', 'contentBase64' => base64_encode(self::png())];
+        $this->call('PUT', '/media/'.self::MEDIA_ID, $body);
+        $this->media->files = [];
+
+        $this->assertError($this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['imageId' => self::MEDIA_ID])), 409, 'image_missing');
+        $this->assertSame(201, $this->call('PUT', '/media/'.self::MEDIA_ID, $body)->getStatusCode());
+        $this->assertCount(1, $this->media->files);
+        $this->assertSame(1, (int) $this->db->fetchOne('SELECT COUNT(*) FROM tl_jetro_media'));
+    }
+
+    public function testPngKopfMitMuell415(): void
+    {
+        $body = ['filename' => 'kaputt.png', 'mimeType' => 'image/png', 'contentBase64' => base64_encode("\x89PNG\r\n\x1a\n".str_repeat('x', 100))];
+
+        $this->assertError($this->call('PUT', '/media/'.self::MEDIA_ID, $body), 415, 'file_type_rejected');
     }
 }

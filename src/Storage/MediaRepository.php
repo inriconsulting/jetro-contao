@@ -29,11 +29,8 @@ final class MediaRepository
     {
         $row = $this->db->fetchAssociative('SELECT * FROM tl_jetro_media WHERE jetroId = ?', [$id]);
 
+        // Bilder gehören keiner Verbindung: eine neue Verbindung nutzt vorhandene weiter (V4)
         if (false !== $row) {
-            if ((int) $row['pid'] !== $connectionId) {
-                throw ApiException::foreign();
-            }
-
             if (null !== $row['uuid'] && $this->storage->exists($row['uuid'])) {
                 return false;
             }
@@ -55,7 +52,11 @@ final class MediaRepository
 
         $size = getimagesizefromstring($content);
 
-        if (false === $size || $size[0] > self::MAX_PIXELS || $size[1] > self::MAX_PIXELS) {
+        if (false === $size) {
+            throw new ApiException(415, 'file_type_rejected', 'Das Bild lässt sich nicht lesen.');
+        }
+
+        if ($size[0] > self::MAX_PIXELS || $size[1] > self::MAX_PIXELS) {
             throw new ApiException(413, 'file_too_large', 'Das Bild ist größer als 6000 × 6000 Pixel.');
         }
 
@@ -70,7 +71,7 @@ final class MediaRepository
      */
     public function uuidFor(int $connectionId, string $id): string|null
     {
-        $row = $this->db->fetchAssociative('SELECT * FROM tl_jetro_media WHERE jetroId = ? AND pid = ?', [$id, $connectionId]);
+        $row = $this->db->fetchAssociative('SELECT * FROM tl_jetro_media WHERE jetroId = ?', [$id]);
 
         if (false === $row || null === $row['uuid'] || !$this->storage->exists($row['uuid'])) {
             return null;

@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace JetroTools\ContaoBundle\Api;
 
+use Contao\Input;
+use Contao\InputEncodingMode;
+
 /**
- * Kodiert Text wie eine Backend-Eingabe (V7f): HTML-Sonderzeichen und Insert-Tag-Klammern.
+ * Kodiert Text genau wie eine Backend-Eingabe ohne HTML (V7f): Contao-Modus encodeAll
+ * samt Insert-Tag-Klammern, damit auch ##Simple-Tokens## und {{Insert-Tags}} Text bleiben.
  */
 final class TextEncoder
 {
     public static function encode(string $text): string
     {
-        $text = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
-
-        return str_replace(['{', '}'], ['&#123;', '&#125;'], $text);
+        return Input::encodeInput($text, InputEncodingMode::encodeAll);
     }
 
     public static function paragraphs(string $text): string

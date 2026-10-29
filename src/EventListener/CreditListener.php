@@ -6,13 +6,14 @@ namespace JetroTools\ContaoBundle\EventListener;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Doctrine\DBAL\Connection;
+use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Zeile „Termine aus Jetro“ unter Terminlisten mit Jetro-Terminen (V7k); je Verbindung abschaltbar.
  * Link nur auf „Jetro“ mit nofollow: verteilte Widget-Links wertet Google sonst als Link-Spam.
  */
-final class CreditListener
+final class CreditListener implements ResetInterface
 {
     /** @var array<int, true> Module, die Jetro-Termine mit Zeile zeigen */
     private array $modules = [];
@@ -73,6 +74,15 @@ final class CreditListener
         $pos = strrpos($buffer, '</div>');
 
         return false === $pos ? $buffer.$line : substr_replace($buffer, $line.'</div>', $pos, 6);
+    }
+
+    /**
+     * Zustand gilt nur für eine Anfrage; Symfony ruft reset() zwischen Anfragen (Worker-Betrieb).
+     */
+    public function reset(): void
+    {
+        $this->modules = [];
+        $this->enabled = null;
     }
 
     private function isEnabled(int $connectionId): bool

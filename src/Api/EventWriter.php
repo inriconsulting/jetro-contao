@@ -213,7 +213,14 @@ final class EventWriter
             }
         }
 
-        return [] === $html ? null : implode("\n", $html);
+        $teaser = implode("\n", $html);
+
+        // Spalte teaser ist TEXT (65 535 Byte)
+        if (\strlen($teaser) > 65535) {
+            throw ApiException::validation('description', 'Die Beschreibung ist zu lang.');
+        }
+
+        return [] === $html ? null : $teaser;
     }
 
     /**

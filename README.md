@@ -24,6 +24,9 @@ Umhängen verschiebt die Termine beim nächsten Abgleich.
 Token verloren? An derselben Verbindung ein neues erzeugen und in Jetro eintragen. Eine **neue** Verbindung
 würde die bisherigen Termine als fremd behandeln.
 
+Das Modul **Jetro** nur Administratoren oder vertrauten Redakteuren freigeben: Wer eine Verbindung bearbeiten darf,
+bestimmt, in welche Kalender Jetro schreibt. Zur Auswahl stehen nur Kalender, die der Benutzer ohnehin bearbeiten darf.
+
 Die Seite **Protokoll** zeigt die letzten 50 Anfragen von Jetro (Zeit, Pfad, Status, Fehlercode), ohne Inhalte und Token.
 
 ## Was das Paket tut

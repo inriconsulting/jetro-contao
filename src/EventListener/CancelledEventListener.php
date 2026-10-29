@@ -47,8 +47,12 @@ final class CancelledEventListener
             }
         }
 
-        $classes = trim(($data['class'] ?? '').' jetro-cancelled');
-        $data['class'] = implode(' ', array_unique(explode(' ', $classes)));
+        // Vorlagen hängen class direkt an „block“ an, das führende Leerzeichen muss bleiben
+        $class = (string) ($data['class'] ?? '');
+
+        if (!preg_match('/(^|\s)jetro-cancelled(\s|$)/', $class)) {
+            $data['class'] = $class.' jetro-cancelled';
+        }
 
         return $data;
     }

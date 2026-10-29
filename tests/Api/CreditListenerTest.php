@@ -39,6 +39,15 @@ final class CreditListenerTest extends ApiTestCase
         $this->assertSame('<nav>x</nav>', $listener->appendCredit('<nav>x</nav>', 'mod_navigation', 7));
     }
 
+    public function testResetVergisstZustandZwischenAnfragen(): void
+    {
+        $listener = $this->listener();
+        $listener->onGetAllEvents($this->events([['jetroConnection' => 1]]), [], 0, 0, $this->module(5));
+        $listener->reset();
+
+        $this->assertSame(self::LIST, $listener->appendCredit(self::LIST, 'mod_eventlist', 5));
+    }
+
     /**
      * @param list<array<string, int>> $events
      */

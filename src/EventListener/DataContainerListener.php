@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace JetroTools\ContaoBundle\EventListener;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\BackendUser;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class DataContainerListener
@@ -14,7 +16,48 @@ final class DataContainerListener
     public function __construct(
         private readonly Connection $db,
         private readonly TranslatorInterface $translator,
+        private readonly Security $security,
     ) {
+    }
+
+    /**
+     * Nur Kalender, die der Benutzer auch sonst bearbeiten darf; sonst könnte er per Token
+     * in fremde Kalender veröffentlichen.
+     *
+     * @return array<int, string>
+     */
+    #[AsCallback(table: 'tl_jetro_connection', target: 'fields.defaultCalendar.options')]
+    #[AsCallback(table: 'tl_jetro_calendar', target: 'fields.calendar.options')]
+    public function calendarOptions(): array
+    {
+        $user = $this->security->getUser();
+        $all = $this->db->fetchAllKeyValue('SELECT id, title FROM tl_calendar ORDER BY title');
+
+        if (!$user instanceof BackendUser) {
+            return [];
+        }
+
+        return self::allowedCalendars($all, (bool) $user->isAdmin, \is_array($user->calendars) ? $user->calendars : null);
+    }
+
+    /**
+     * @param array<int|string, string>   $all
+     * @param array<int|string>|null      $allowed
+     *
+     * @return array<int, string>
+     */
+    public static function allowedCalendars(array $all, bool $admin, array|null $allowed): array
+    {
+        $result = [];
+        $allowed = array_map('intval', $allowed ?? []);
+
+        foreach ($all as $id => $title) {
+            if ($admin || \in_array((int) $id, $allowed, true)) {
+                $result[(int) $id] = (string) $title;
+            }
+        }
+
+        return $result;
     }
 
     /**
