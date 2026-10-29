@@ -47,6 +47,10 @@ docker build -t jetro-contao-test -f docker/test.Dockerfile docker
 docker run --rm -v "$PWD":/app jetro-contao-test sh -c 'composer install && vendor/bin/phpunit'
 ```
 
+Integrationstest gegen ein echtes Contao mit MySQL (installiert das Paket, startet einen Webserver und prüft den
+Vertrag über HTTP): `CONTAO='5.7.*' DATABASE_URL=mysql://… tests/Integration/run.sh`. Die CI führt ihn für
+Contao 5.3 und 5.7 aus. Die Vertrags-Fixtures unter `tests/Fixtures/jetro/` stammen unverändert aus Jetro.
+
 Der Vertrag zwischen Jetro und diesem Paket steht in der Jetro-Spezifikation `website-contao.md`
 (Abschnitt „Vertrag Jetro → Paket (api 1)“). Abweichungen nur über eine Änderung dort.
 

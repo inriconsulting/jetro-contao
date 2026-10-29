@@ -33,3 +33,33 @@ jobs:
         run: find src contao \( -name '*.php' -o -name '*.html5' \) -print0 | xargs -0 -n1 php -l
       - name: PHPUnit
         run: vendor/bin/phpunit
+
+  integration:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { php: '8.2', contao: '5.3.*' }
+          - { php: '8.4', contao: '5.7.*' }
+    name: Integration PHP ${{ matrix.php }} / Contao ${{ matrix.contao }}
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: contao
+        ports: ['3306:3306']
+        options: --health-cmd="mysqladmin ping -proot" --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: intl, gd, zip, pdo_mysql, fileinfo
+          coverage: none
+      - name: Echtes Contao mit Paket
+        env:
+          CONTAO: ${{ matrix.contao }}
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao
+        run: tests/Integration/run.sh

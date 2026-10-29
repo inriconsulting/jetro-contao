@@ -15,6 +15,7 @@ services:
     JetroTools\ContaoBundle\Api\ApiController:
         arguments:
             $version: '%jetro_contao.version%'
+            $framework: '@contao.framework'
 
     JetroTools\ContaoBundle\Api\SluggerInterface: '@JetroTools\ContaoBundle\Contao\ContaoSlugger'
     JetroTools\ContaoBundle\Api\LabelProviderInterface: '@JetroTools\ContaoBundle\Contao\ContaoLabelProvider'

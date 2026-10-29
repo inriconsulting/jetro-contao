@@ -28,7 +28,7 @@ final class PutEventTest extends ApiTestCase
         $this->assertSame(1, (int) $row['jetroConnection']);
         $this->assertSame(0, (int) $row['jetroCancelled']);
         $this->assertStringContainsString('<p>Klartext mit<br>Zeilenumbrüchen</p>', $row['teaser']);
-        $this->assertStringContainsString('<a href="https://musterkirche.jetro.tools/anmeldung/abc"', $row['teaser']);
+        $this->assertStringContainsString('<a href="https://musterkirche.jetro.tools/anmeldung/0192f3a4-5b6c-7d8e-9f01-23456789abcd"', $row['teaser']);
         $this->assertStringContainsString('Zur Anmeldung', $row['teaser']);
     }
 
@@ -57,7 +57,95 @@ final class PutEventTest extends ApiTestCase
         $this->assertSame(0, (int) $row['addTime']);
         $this->assertSame(mktime(0, 0, 0, 12, 24, 2026), (int) $row['startDate']);
         $this->assertSame(mktime(0, 0, 0, 12, 26, 2026), (int) $row['endDate']);
-        $this->assertSame(mktime(0, 0, 0, 12, 26, 2026), (int) $row['endTime']);
+        $this->assertSame(mktime(23, 59, 59, 12, 26, 2026), (int) $row['endTime'], 'wie der Kern: Ende des letzten Tages');
+    }
+
+    public function testEintaegigGanztaegigEndetUm235959(): void
+    {
+        $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['allDay' => true, 'start' => '2026-12-24', 'end' => '2026-12-24']));
+
+        $row = $this->event();
+        $this->assertNull($row['endDate']);
+        $this->assertSame(mktime(0, 0, 0, 12, 24, 2026), (int) $row['startTime']);
+        $this->assertSame(mktime(23, 59, 59, 12, 24, 2026), (int) $row['endTime']);
+    }
+
+    public function testTitelDerKodiertZuLangWird422(): void
+    {
+        $response = $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['title' => str_repeat('a', 254).'&']));
+
+        $this->assertError($response, 422, 'validation');
+        $this->assertSame('title', $this->json($response)['field']);
+        $this->assertFalse($this->event());
+    }
+
+    public function testOrtDerKodiertZuLangWird422(): void
+    {
+        $location = ['name' => str_repeat('O', 300), 'street' => null, 'postalCode' => null, 'town' => null, 'country' => null];
+        $response = $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['location' => $location]));
+
+        $this->assertError($response, 422, 'validation');
+        $this->assertSame('location.name', $this->json($response)['field']);
+    }
+
+    public function testLangerTitelErgibtAliasHoechstens255(): void
+    {
+        $this->assertSame(201, $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['title' => str_repeat('Wort ', 51)]))->getStatusCode());
+
+        $this->assertLessThanOrEqual(255, \strlen($this->event()['alias']));
+    }
+
+    public function testInsertTagsInTextOrtUndLinkWerdenKodiert(): void
+    {
+        $location = ['name' => '{{file::x.php}}', 'street' => '{{env::host}}', 'postalCode' => null, 'town' => null, 'country' => null];
+        $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture([
+            'description' => 'Text {{file::x.php}} {{env::host}}',
+            'location' => $location,
+            'signupUrl' => 'https://example.org/?a={{env::host}}',
+        ]));
+
+        $row = $this->event();
+        foreach (['teaser', 'location', 'address'] as $field) {
+            $this->assertStringNotContainsString('{{', (string) $row[$field], $field);
+        }
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function boeseLinks(): iterable
+    {
+        yield 'javascript gross' => ['JAVASCRIPT:alert(1)'];
+        yield 'Leerraum davor' => [' https://example.org/'];
+        yield 'Steuerzeichen davor' => ["\x01https://example.org/"];
+        yield 'data' => ['data:text/html,<script>alert(1)</script>'];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('boeseLinks')]
+    public function testUnsichereLinks422(string $url): void
+    {
+        $response = $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['videoUrl' => $url]));
+
+        $this->assertError($response, 422, 'validation');
+        $this->assertSame('videoUrl', $this->json($response)['field']);
+    }
+
+    public function testAnfrageUeber4MbWird413(): void
+    {
+        $body = json_encode($this->fixture(['description' => str_repeat('x', 4 * 1024 * 1024)]), JSON_THROW_ON_ERROR);
+
+        $this->assertError($this->call('PUT', '/events/'.self::EVENT_ID, $body), 413, 'file_too_large');
+    }
+
+    public function testAusnahmeWird500OhneInterna(): void
+    {
+        $this->db->executeStatement('DROP TABLE tl_calendar_events');
+
+        $response = $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture());
+
+        $this->assertError($response, 500, 'internal');
+        $this->assertStringNotContainsString('tl_calendar_events', (string) $response->getContent());
+        $this->assertStringNotContainsString('SQL', (string) $response->getContent());
     }
 
     public function testTitelMitHtmlUndInsertTagsWirdKodiert(): void

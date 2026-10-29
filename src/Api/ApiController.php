@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace JetroTools\ContaoBundle\Api;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use JetroTools\ContaoBundle\Storage\ConnectionRepository;
 use JetroTools\ContaoBundle\Storage\MediaRepository;
 use JetroTools\ContaoBundle\Storage\RequestLog;
@@ -32,6 +33,7 @@ final class ApiController
         private readonly RequestLog $log,
         private readonly LoggerInterface $logger,
         private readonly string $version,
+        private readonly ContaoFramework|null $framework = null,
     ) {
     }
 
@@ -50,6 +52,8 @@ final class ApiController
         $connection = null;
 
         try {
+            // Zeitzone und Sprache der Website gelten erst nach der Initialisierung
+            $this->framework?->initialize();
             $connection = $this->authenticate($request);
             [$status, $body] = $this->dispatch($request, $connection, $path);
             $response = null === $body ? new Response('', $status) : new JsonResponse($body, $status);

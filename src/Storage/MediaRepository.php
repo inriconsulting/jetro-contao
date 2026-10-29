@@ -11,6 +11,9 @@ final class MediaRepository
 {
     public const MAX_BYTES = 2 * 1024 * 1024;
 
+    /** Grenze gegen Bilder, die beim Verkleinern den Speicher sprengen */
+    public const MAX_PIXELS = 6000;
+
     private const TYPES = ['image/png' => 'png', 'image/jpeg' => 'jpg', 'image/webp' => 'webp'];
 
     public function __construct(
@@ -48,6 +51,12 @@ final class MediaRepository
 
         if (!isset(self::TYPES[$type])) {
             throw new ApiException(415, 'file_type_rejected', 'Nur PNG, JPEG und WebP sind erlaubt.');
+        }
+
+        $size = getimagesizefromstring($content);
+
+        if (false === $size || $size[0] > self::MAX_PIXELS || $size[1] > self::MAX_PIXELS) {
+            throw new ApiException(413, 'file_too_large', 'Das Bild ist größer als 6000 × 6000 Pixel.');
         }
 
         $uuid = $this->storage->store($id, self::TYPES[$type], $content);

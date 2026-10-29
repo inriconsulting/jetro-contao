@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-fileinfo": "*",
         "contao/calendar-bundle": "^5.3",
         "contao/core-bundle": "^5.3",
         "doctrine/dbal": "^3.6 || ^4.0",

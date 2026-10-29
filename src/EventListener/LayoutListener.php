@@ -6,6 +6,7 @@ namespace JetroTools\ContaoBundle\EventListener;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 
 /**
@@ -59,7 +60,7 @@ final class LayoutListener
 
         // Mehrtägige Termine nur einmal: sonst erscheint eine Freizeit als Karte je Tag
         $fields = ['cal_template' => $event, 'customTpl' => $module, 'cal_noSpan' => '1'];
-        $current = @unserialize((string) $row['imgSize']) ?: [];
+        $current = StringUtil::deserialize($row['imgSize'], true);
 
         if (null !== $size && '' === implode('', array_map('strval', $current))) {
             $fields['imgSize'] = serialize($size);

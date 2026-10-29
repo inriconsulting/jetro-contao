@@ -56,9 +56,9 @@ final class EventWriter
         $fields = [
             'pid' => $calendar,
             'tstamp' => ($this->now)(),
-            'title' => TextEncoder::encode($data->title),
-            'location' => TextEncoder::encode((string) ($data->location['name'] ?? '')),
-            'address' => TextEncoder::encode($this->address($data->location)),
+            'title' => $this->fit(TextEncoder::encode($data->title), 'title'),
+            'location' => $this->fit(TextEncoder::encode((string) ($data->location['name'] ?? '')), 'location.name'),
+            'address' => $this->fit(TextEncoder::encode($this->address($data->location)), 'location'),
             'teaser' => $this->teaser($data, $calendar),
             'addImage' => null === $image ? 0 : 1,
             'singleSRC' => $image,
@@ -153,12 +153,13 @@ final class EventWriter
             $startDate = (new \DateTimeImmutable($data->start->format('Y-m-d'), $tz))->getTimestamp();
             $endDate = (new \DateTimeImmutable($data->end->format('Y-m-d'), $tz))->getTimestamp();
 
+            // Ende wie im Kern um 23:59:59, sonst fällt der Termin um 00:00 aus „Nächste …“-Listen
             return [
                 'addTime' => 0,
                 'startDate' => $startDate,
                 'startTime' => $startDate,
                 'endDate' => $endDate === $startDate ? null : $endDate,
-                'endTime' => $endDate,
+                'endTime' => (new \DateTimeImmutable($data->end->format('Y-m-d'), $tz))->modify('+1 day')->getTimestamp() - 1,
             ];
         }
 
@@ -215,9 +216,22 @@ final class EventWriter
         return [] === $html ? null : implode("\n", $html);
     }
 
+    /**
+     * Längen erst nach dem Kodieren prüfen: aus & wird &amp;, die Spalten fassen 255 Zeichen.
+     */
+    private function fit(string $encoded, string $field): string
+    {
+        if (mb_strlen($encoded) > 255) {
+            throw ApiException::validation($field, 'Der Text ist zu lang.');
+        }
+
+        return $encoded;
+    }
+
     private function alias(string $title, string $id, int $calendar): string
     {
-        $slug = $this->slugger->slug($title, $calendar);
+        // Platz für „-“ und die volle ID (37 Zeichen) in varchar(255) lassen
+        $slug = rtrim(mb_substr($this->slugger->slug($title, $calendar), 0, 255 - 37), '-');
         $alias = ('' === $slug ? 'termin' : $slug).'-'.strtolower(substr($id, 0, 8));
 
         // Ein von der Redaktion vergebener gleicher Alias bleibt; dann hängt die volle ID an

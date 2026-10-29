@@ -1,0 +1,14 @@
+{
+  "title": "Gemeindefreizeit",
+  "description": null,
+  "allDay": true,
+  "start": "2026-11-06",
+  "end": "2026-11-08",
+  "timezone": "Europe/Berlin",
+  "calendar": { "key": "gemeinde", "name": "Gemeinde", "color": null },
+  "location": null,
+  "videoUrl": null,
+  "signupUrl": null,
+  "imageId": null,
+  "cancelled": false
+}

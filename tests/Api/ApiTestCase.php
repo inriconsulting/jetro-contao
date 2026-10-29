@@ -91,13 +91,21 @@ abstract class ApiTestCase extends TestCase
     }
 
     /**
+     * @return array<mixed>
+     */
+    protected static function jetroFixture(string $name): array
+    {
+        return json_decode((string) file_get_contents(__DIR__.'/../Fixtures/jetro/'.$name.'.json'), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * v2-event aus Jetro ohne Bild; die Bildfälle prüfen eigene Tests mit v4-media.
+     *
      * @return array<string, mixed>
      */
     protected function fixture(array $override = []): array
     {
-        $data = json_decode((string) file_get_contents(__DIR__.'/../Fixtures/v2-event.json'), true, 512, JSON_THROW_ON_ERROR);
-
-        return array_replace($data, $override);
+        return array_replace(self::jetroFixture('v2-event'), ['imageId' => null], $override);
     }
 
     /**

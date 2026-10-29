@@ -41,6 +41,19 @@ final class MediaTest extends ApiTestCase
         $this->assertError($this->call('PUT', '/media/'.self::MEDIA_ID, $body), 413, 'file_too_large');
     }
 
+    public function testZuGrosseAbmessungen413(): void
+    {
+        $image = imagecreatetruecolor(6001, 2);
+        ob_start();
+        imagepng($image);
+        $png = (string) ob_get_clean();
+
+        $body = ['filename' => 'breit.png', 'mimeType' => 'image/png', 'contentBase64' => base64_encode($png)];
+
+        $this->assertError($this->call('PUT', '/media/'.self::MEDIA_ID, $body), 413, 'file_too_large');
+        $this->assertSame([], $this->media->files);
+    }
+
     public function testKeinBase64422(): void
     {
         $this->assertError($this->call('PUT', '/media/'.self::MEDIA_ID, ['filename' => 'x.png', 'mimeType' => 'image/png', 'contentBase64' => '%%%']), 422, 'validation');

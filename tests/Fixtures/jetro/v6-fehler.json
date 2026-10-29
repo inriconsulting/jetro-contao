@@ -1,0 +1,12 @@
+[
+  { "status": 400, "code": "invalid_json" },
+  { "status": 401, "code": "auth_rejected" },
+  { "status": 404, "code": "not_found" },
+  { "status": 409, "code": "image_missing" },
+  { "status": 409, "code": "foreign" },
+  { "status": 410, "code": "gone" },
+  { "status": 413, "code": "file_too_large" },
+  { "status": 415, "code": "file_type_rejected" },
+  { "status": 422, "code": "validation", "field": "calendar" },
+  { "status": 500, "code": "internal" }
+]

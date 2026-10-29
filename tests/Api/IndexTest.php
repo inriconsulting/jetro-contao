@@ -47,7 +47,7 @@ final class IndexTest extends ApiTestCase
         $this->assertError($this->call('PUT', '/events/keine-uuid', $this->fixture()), 404, 'not_found');
     }
 
-    public function testProtokollOhneTokenUndHoechstens50Eintraege(): void
+    public function testProtokollOhneTokenUndHoechstens50EintraegeJeVerbindung(): void
     {
         for ($i = 0; $i < 55; ++$i) {
             $this->call('GET', '/');
@@ -58,5 +58,19 @@ final class IndexTest extends ApiTestCase
         $this->assertSame('GET', $rows[0]['method']);
         $this->assertSame('/api/jetro/v1/', $rows[0]['path']);
         $this->assertStringNotContainsString(self::TOKEN, json_encode($rows, JSON_THROW_ON_ERROR));
+    }
+
+    public function testAbgewieseneAnfragenVerdraengenKeineEchten(): void
+    {
+        for ($i = 0; $i < 5; ++$i) {
+            $this->call('GET', '/');
+        }
+
+        for ($i = 0; $i < 60; ++$i) {
+            $this->call('GET', '/', null, []);
+        }
+
+        $this->assertSame(5, (int) $this->db->fetchOne('SELECT COUNT(*) FROM tl_jetro_log WHERE pid = 1'));
+        $this->assertSame(10, (int) $this->db->fetchOne('SELECT COUNT(*) FROM tl_jetro_log WHERE pid = 0'));
     }
 }

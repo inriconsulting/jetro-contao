@@ -38,6 +38,15 @@ final class DeleteEventTest extends ApiTestCase
         $this->assertSame(1, (int) $this->event()['published']);
     }
 
+    public function testLaufenderTerminBleibtStehen(): void
+    {
+        $this->now = strtotime('2026-11-01T10:30:00+01:00');
+        $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture());
+
+        $this->assertSame(204, $this->call('DELETE', '/events/'.self::EVENT_ID)->getStatusCode());
+        $this->assertSame(1, (int) $this->event()['published']);
+    }
+
     public function testUnbekannt404(): void
     {
         $this->assertError($this->call('DELETE', '/events/'.self::EVENT_ID), 404, 'not_found');

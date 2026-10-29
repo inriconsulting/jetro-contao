@@ -50,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_jetro_connection'] = [
             'eval' => ['tl_class' => 'w50 m12'],
             'sql' => ['type' => 'boolean', 'default' => true],
         ],
-        'tokenHash' => ['eval' => ['doNotCopy' => true, 'doNotShow' => true], 'sql' => ['type' => 'string', 'length' => 64, 'default' => '']],
-        'tokenCreated' => ['eval' => ['doNotCopy' => true, 'rgxp' => 'datim'], 'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0]],
+        'tokenHash' => ['eval' => ['doNotCopy' => true, 'doNotShow' => true, 'versionize' => false], 'sql' => ['type' => 'string', 'length' => 64, 'default' => '']],
+        'tokenCreated' => ['eval' => ['doNotCopy' => true, 'rgxp' => 'datim', 'versionize' => false], 'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0]],
     ],
 ];
