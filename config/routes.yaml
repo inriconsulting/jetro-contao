@@ -1,0 +1,3 @@
+jetro_contao_api:
+    resource: ../src/Api/
+    type: attribute

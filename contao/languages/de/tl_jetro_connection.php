@@ -1,0 +1,27 @@
+<?php
+
+$GLOBALS['TL_LANG']['tl_jetro_connection']['title_legend'] = 'Verbindung';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['calendar_legend'] = 'Kalender';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['title'] = ['Bezeichnung', 'Zum Beispiel der Name der Gemeinde in Jetro.'];
+$GLOBALS['TL_LANG']['tl_jetro_connection']['defaultCalendar'] = ['Standard-Kalender', 'Nimmt alle Termine auf, deren Jetro-Kalender keine eigene Zuordnung hat. Ohne Standard-Kalender lehnt Contao solche Termine ab.'];
+$GLOBALS['TL_LANG']['tl_jetro_connection']['edit'] = 'Verbindung bearbeiten';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['children'] = 'Kalender-Zuordnungen bearbeiten';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['token'] = 'Token erzeugen';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['revoke'] = 'Token widerrufen';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['delete'] = 'Verbindung löschen';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['show'] = 'Details anzeigen';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['log'] = ['Protokoll', 'Die letzten 50 Anfragen von Jetro'];
+$GLOBALS['TL_LANG']['tl_jetro_connection']['new'] = ['Neue Verbindung', 'Eine Verbindung zu Jetro anlegen'];
+$GLOBALS['TL_LANG']['tl_jetro_connection']['status_none'] = 'kein Token';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['status_active'] = 'Token seit %s';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['default_calendar'] = 'Standard-Kalender';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['not_found'] = 'Die Verbindung gibt es nicht.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['confirm_create'] = 'Für „%s“ ein Token erzeugen?';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['confirm_replace'] = 'Für „%s“ ein neues Token erzeugen? Das bisherige Token wird sofort ungültig; Jetro braucht danach das neue.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['confirm_revoke'] = 'Das Token von „%s“ widerrufen? Jetro kann danach keine Termine mehr schreiben; bisherige Termine bleiben.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['button_create'] = 'Token erzeugen';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['button_revoke'] = 'Token widerrufen';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['token_created'] = 'Das Token wurde erzeugt.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['token_label'] = 'Token für Jetro';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['token_once'] = 'Jetzt kopieren und in Jetro unter Einstellungen → Website eintragen. Contao zeigt das Token nur dieses eine Mal an; verloren gegangen? Einfach hier ein neues erzeugen.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['token_revoked'] = 'Das Token wurde widerrufen.';

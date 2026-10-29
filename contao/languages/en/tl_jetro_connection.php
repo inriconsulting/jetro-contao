@@ -1,0 +1,27 @@
+<?php
+
+$GLOBALS['TL_LANG']['tl_jetro_connection']['title_legend'] = 'Connection';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['calendar_legend'] = 'Calendar';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['title'] = ['Title', 'For example the name of the church in Jetro.'];
+$GLOBALS['TL_LANG']['tl_jetro_connection']['defaultCalendar'] = ['Default calendar', 'Receives all events whose Jetro calendar has no mapping. Without a default calendar such events are rejected.'];
+$GLOBALS['TL_LANG']['tl_jetro_connection']['edit'] = 'Edit connection';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['children'] = 'Edit calendar mappings';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['token'] = 'Create token';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['revoke'] = 'Revoke token';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['delete'] = 'Delete connection';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['show'] = 'Show details';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['log'] = ['Log', 'The last 50 requests from Jetro'];
+$GLOBALS['TL_LANG']['tl_jetro_connection']['new'] = ['New connection', 'Create a connection to Jetro'];
+$GLOBALS['TL_LANG']['tl_jetro_connection']['status_none'] = 'no token';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['status_active'] = 'token since %s';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['default_calendar'] = 'Default calendar';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['not_found'] = 'The connection does not exist.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['confirm_create'] = 'Create a token for "%s"?';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['confirm_replace'] = 'Create a new token for "%s"? The current token stops working immediately; Jetro needs the new one.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['confirm_revoke'] = 'Revoke the token of "%s"? Jetro can no longer write events; existing events remain.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['button_create'] = 'Create token';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['button_revoke'] = 'Revoke token';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['token_created'] = 'The token has been created.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['token_label'] = 'Token for Jetro';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['token_once'] = 'Copy it now and enter it in Jetro under Settings → Website. Contao shows the token only once; lost it? Simply create a new one here.';
+$GLOBALS['TL_LANG']['tl_jetro_connection']['token_revoked'] = 'The token has been revoked.';
