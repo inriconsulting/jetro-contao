@@ -6,4 +6,5 @@
 - Backend „Jetro“: Verbindungen, Token erzeugen und widerrufen, Standard-Kalender, Kalender-Zuordnung, Protokoll
 - Hinweis „Abgesagt“ in Terminliste und Leseansicht
 - Termin-Vorlagen für die Kern-Terminliste: Slider, große Bildkarten, kompakte Karten, Liste mit Vorschaubild; Bild aus Jetro oder Kalenderblatt, Farben über CSS-Variablen
+- Feld „Darstellung“ an der Terminliste stellt die passenden Vorlagen und die Bildgröße ein
 - Zeile „Termine aus Jetro“ unter Terminlisten mit Jetro-Terminen, je Verbindung abschaltbar

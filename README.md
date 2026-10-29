@@ -74,7 +74,9 @@ Einrichtung:
 
 1. Frontend-Modul „Terminliste“ anlegen, Kalender wählen, Format z. B. „Nächste 365 Tage“, Sortierung aufsteigend.
 2. **Gesamtzahl der Termine** z. B. 6; **Anzahl der Wiederholungen** größer 0, sonst zeigt Contao jede Serie nur einmal.
-3. Event-Template, individuelles Template und Bildgröße aus der Tabelle wählen. Ohne Bildgröße nimmt Contao das Original.
+3. Im Abschnitt **Darstellung** eine der Jetro-Darstellungen wählen. Das Paket stellt Event-Template und
+   individuelles Template passend ein und trägt die empfohlene Bildgröße ein, wenn noch keine gesetzt ist.
+   „Contao-Standard“ setzt die Vorlagen zurück. Von Hand geht es weiter unter „Template-Einstellungen“.
 
 Farben passen sich über CSS-Variablen an das eigene Design an, z. B.:
 
