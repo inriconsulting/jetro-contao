@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace JetroTools\ContaoBundle\Backend;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Doctrine\DBAL\Connection;
 use JetroTools\ContaoBundle\Storage\ConnectionRepository;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -15,9 +17,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Token erzeugen und widerrufen. Zustandsänderung nur per POST mit Anfrage-Token;
  * das neue Token wird genau einmal angezeigt und nur als SHA-256 gespeichert (V7a).
+ *
+ * Post/Redirect/Get: Contao 5.7 schickt Backend-Formulare über Turbo, das nach einem POST
+ * eine Weiterleitung verlangt. Das neue Token liegt darum bis zur nächsten Anzeige (höchstens
+ * fünf Minuten) in der Sitzung und wird beim Lesen sofort entfernt.
  */
 final class TokenAction
 {
+    private const SESSION_KEY = 'jetro_token_result';
+    private const MAX_AGE = 300;
+
     public function __construct(
         private readonly Connection $db,
         private readonly RequestStack $requestStack,
@@ -49,23 +58,35 @@ final class TokenAction
             return $this->frame($back, '<p class="tl_error">'.$this->t('not_found').'</p>');
         }
 
-        if ('POST' === $request->getMethod() && 'jetro_'.$action === $request->request->get('FORM_SUBMIT')) {
-            if ('token' === $action) {
-                $token = ConnectionRepository::newToken();
-                $this->db->update('tl_jetro_connection', ['tokenHash' => hash('sha256', $token), 'tokenCreated' => time(), 'tstamp' => time()], ['id' => $id]);
+        $result = $this->takeResult($request, $id, $action);
 
+        if (null !== $result) {
+            if ('token' === $action) {
                 return $this->frame($back, \sprintf(
                     '<p class="tl_confirm">%s</p><div class="widget"><h3><label for="jetro_token">%s</label></h3><input id="jetro_token" class="tl_text" type="text" readonly value="%s" onfocus="this.select()"><p class="tl_help tl_tip">%s</p></div>',
                     $this->e($this->t('token_created')),
                     $this->e($this->t('token_label')),
-                    $this->e($token),
+                    $this->e($result),
                     $this->e($this->t('token_once')),
                 ));
             }
 
-            $this->db->update('tl_jetro_connection', ['tokenHash' => '', 'tokenCreated' => 0, 'tstamp' => time()], ['id' => $id]);
-
             return $this->frame($back, '<p class="tl_confirm">'.$this->e($this->t('token_revoked')).'</p>');
+        }
+
+        if ('POST' === $request->getMethod() && 'jetro_'.$action === $request->request->get('FORM_SUBMIT')) {
+            $token = '';
+
+            if ('token' === $action) {
+                $token = ConnectionRepository::newToken();
+                $this->db->update('tl_jetro_connection', ['tokenHash' => hash('sha256', $token), 'tokenCreated' => time(), 'tstamp' => time()], ['id' => $id]);
+            } else {
+                $this->db->update('tl_jetro_connection', ['tokenHash' => '', 'tokenCreated' => 0, 'tstamp' => time()], ['id' => $id]);
+            }
+
+            $request->getSession()->set(self::SESSION_KEY, ['id' => $id, 'action' => $action, 'token' => $token, 'time' => time()]);
+
+            throw new RedirectResponseException($request->getRequestUri());
         }
 
         $question = $this->t('token' === $action ? ('' === $row['tokenHash'] ? 'confirm_create' : 'confirm_replace') : 'confirm_revoke');
@@ -77,6 +98,26 @@ final class TokenAction
             $this->e(\sprintf($question, $row['title'])),
             $this->e($this->t('token' === $action ? 'button_create' : 'button_revoke')),
         ));
+    }
+
+    /**
+     * Ergebnis des letzten POST genau einmal lesen; jeder Aufruf entfernt es aus der Sitzung.
+     */
+    private function takeResult(Request $request, int $id, string $action): string|null
+    {
+        if (!$request->hasSession()) {
+            return null;
+        }
+
+        $session = $request->getSession();
+        $stored = $session->get(self::SESSION_KEY);
+        $session->remove(self::SESSION_KEY);
+
+        if (!\is_array($stored) || ($stored['id'] ?? null) !== $id || ($stored['action'] ?? null) !== $action || time() - (int) ($stored['time'] ?? 0) > self::MAX_AGE) {
+            return null;
+        }
+
+        return (string) ($stored['token'] ?? '');
     }
 
     private function frame(string $back, string $body): string

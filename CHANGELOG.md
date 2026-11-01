@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2 – 2026-11-01
+
+- Token erzeugen und widerrufen funktioniert unter Contao 5.7 (Backend-Formulare über Turbo): Nach dem Absenden leitet das Paket weiter (Post/Redirect/Get), das neue Token erscheint danach genau einmal. Bisher speicherte Contao 5.7 das Token, zeigte es aber nie an.
+- Überschrift der Token-Seite zeigt den Namen der Aktion statt eines einzelnen Buchstabens
+
 ## 1.0.1 – 2026-10-29
 
 - Homepage, Autor und Support-Links in composer.json (Anzeige auf Packagist)
