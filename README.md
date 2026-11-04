@@ -1,6 +1,6 @@
 # Jetro für Contao
 
-Übernimmt Termine aus [Jetro](https://jetro.tools) in Contao-Kalender. Jetro schreibt öffentliche Termine
+Übernimmt Termine aus [Jetro](https://www.jetro.tools/) in Contao-Kalender. Jetro schreibt öffentliche Termine
 server-zu-server in die Website: anlegen, ändern, absagen, künftige löschen, mit Ort, Bild,
 Livestream- und Anmeldelink. Die Redaktion in Contao behält alles, was Jetro nicht liefert
 (Veröffentlichung, Hervorheben, Buchungen, weitere Inhaltselemente).
@@ -8,6 +8,8 @@ Livestream- und Anmeldelink. Die Redaktion in Contao behält alles, was Jetro ni
 - Contao ab 5.3, PHP ab 8.2
 - nur Kern-Felder von `tl_calendar_events`, keine weiteren Erweiterungen nötig
 - Lizenz MIT
+
+Einrichtung und Darstellungen mit Bildern: [Termine auf der Contao-Seite der Gemeinde](https://www.jetro.tools/wissen/termine-contao-gemeinde-website/).
 
 ## Installation
 
