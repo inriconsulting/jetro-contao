@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace JetroTools\ContaoBundle\EventListener;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\BackendUser;
+use Contao\CoreBundle\DataContainer\RecordLabel;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -64,47 +65,56 @@ final class DataContainerListener
      * @param array<string, mixed> $row
      */
     #[AsCallback(table: 'tl_jetro_connection', target: 'list.label.label')]
-    public function connectionLabel(array $row): string
+    public function connectionLabel(array $row): string|object
     {
         $calendar = $this->db->fetchOne('SELECT title FROM tl_calendar WHERE id = ?', [(int) $row['defaultCalendar']]);
         $status = '' === (string) $row['tokenHash']
             ? $this->t('status_none')
             : \sprintf($this->t('status_active'), Date::parse(Date::getNumericDatimFormat(), (int) $row['tokenCreated']));
 
-        return \sprintf(
+        return self::html(\sprintf(
             '%s <span class="label-info">[%s]</span> <span class="tl_gray">%s: %s</span>',
             htmlspecialchars((string) $row['title']),
             htmlspecialchars($status),
             htmlspecialchars($this->t('default_calendar')),
             htmlspecialchars(false === $calendar ? '–' : (string) $calendar),
-        );
+        ));
     }
 
     /**
      * @param array<string, mixed> $row
      */
     #[AsCallback(table: 'tl_jetro_calendar', target: 'list.sorting.child_record')]
-    public function mappingLabel(array $row): string
+    #[AsCallback(table: 'tl_jetro_calendar', target: 'list.label.label')]
+    public function mappingLabel(array $row): string|object
     {
         $calendar = $this->db->fetchOne('SELECT title FROM tl_calendar WHERE id = ?', [(int) $row['calendar']]);
 
-        return \sprintf('<code>%s</code> → %s', htmlspecialchars((string) $row['jetroKey']), htmlspecialchars(false === $calendar ? '–' : (string) $calendar));
+        return self::html(\sprintf('<code>%s</code> → %s', htmlspecialchars((string) $row['jetroKey']), htmlspecialchars(false === $calendar ? '–' : (string) $calendar)));
     }
 
     /**
      * @param array<string, mixed> $row
      */
     #[AsCallback(table: 'tl_jetro_log', target: 'list.label.label')]
-    public function logLabel(array $row): string
+    public function logLabel(array $row): string|object
     {
-        return \sprintf(
+        return self::html(\sprintf(
             '%s · %s %s → %d%s',
             Date::parse(Date::getNumericDatimFormat(), (int) $row['tstamp']),
             htmlspecialchars((string) $row['method']),
             htmlspecialchars((string) $row['path']),
             (int) $row['status'],
             '' === (string) $row['code'] ? '' : ' <code>'.htmlspecialchars((string) $row['code']).'</code>',
-        );
+        ));
+    }
+
+    /**
+     * Contao 6 kodiert Zeichenketten aus dem label_callback; HTML muss als RecordLabel kommen.
+     */
+    private static function html(string $html): string|object
+    {
+        return class_exists(RecordLabel::class) ? RecordLabel::fromHtml($html) : $html;
     }
 
     private function t(string $key): string

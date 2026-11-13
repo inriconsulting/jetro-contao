@@ -1,5 +1,5 @@
 #!/bin/sh
-# Echtes Contao mit MySQL: Paket installieren, Webserver starten, Vertrag über HTTP prüfen.
+# Echtes Contao mit MySQL: Paket installieren, Webserver starten, Vertrag und Darstellungen über HTTP prüfen.
 # Erwartet: CONTAO (z. B. 5.3.*), DATABASE_URL, Paket unter /pkg bzw. $PKG.
 set -eu
 PKG=${PKG:-$(cd "$(dirname "$0")/../.." && pwd)}
@@ -14,8 +14,11 @@ composer require --no-interaction --no-progress --no-scripts "jetro-tools/contao
 printf 'DATABASE_URL=%s\nAPP_SECRET=integration\n' "$DATABASE_URL" > .env.local
 php vendor/bin/contao-setup >/tmp/contao-setup.log 2>&1 || { cat /tmp/contao-setup.log; exit 1; }
 php vendor/bin/contao-console contao:migrate --no-interaction --no-backup >/tmp/contao-migrate.log 2>&1 || { cat /tmp/contao-migrate.log; exit 1; }
+php vendor/bin/contao-console contao:user:create --username=jetro-test --name='Jetro Test' --email=jetro@example.org --password=jetro-integration-1 --language=de --admin --no-interaction >/dev/null
 php -S 127.0.0.1:8090 -t public public/index.php >/tmp/contao-server.log 2>&1 &
 SERVER=$!
 trap 'kill $SERVER 2>/dev/null || true' EXIT
 sleep 2
 php "$PKG/tests/Integration/smoke.php" "$APP" http://127.0.0.1:8090
+php "$PKG/tests/Integration/frontend.php" "$APP" http://127.0.0.1:8090
+php "$PKG/tests/Integration/backend.php" "$APP" http://127.0.0.1:8090

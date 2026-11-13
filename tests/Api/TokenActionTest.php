@@ -115,9 +115,9 @@ final class TokenActionTest extends TestCase
         $request->setSession($this->session);
         $this->stack->push($request);
 
-        $csrf = $this->createMock(ContaoCsrfTokenManager::class);
+        $csrf = $this->createStub(ContaoCsrfTokenManager::class);
         $csrf->method('getDefaultTokenValue')->willReturn('rt');
-        $router = $this->createMock(UrlGeneratorInterface::class);
+        $router = $this->createStub(UrlGeneratorInterface::class);
         $router->method('generate')->willReturn('/contao?do=jetro');
 
         $translator = new class() implements TranslatorInterface {

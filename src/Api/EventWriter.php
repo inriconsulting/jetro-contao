@@ -207,8 +207,8 @@ final class EventWriter
                 $html[] = \sprintf(
                     '<p class="jetro-%s"><a href="%s" target="_blank" rel="noopener">%s</a></p>',
                     $key,
-                    TextEncoder::encode($url),
-                    TextEncoder::encode($this->labels->label($key, $calendar)),
+                    TextEncoder::html($url),
+                    TextEncoder::html($this->labels->label($key, $calendar)),
                 );
             }
         }

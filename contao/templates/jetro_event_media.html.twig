@@ -1,0 +1,34 @@
+{# Bild aus Jetro, sonst ein Kalenderblatt mit Tag und Monat (siehe EventTemplateListener) #}
+{% if addImage|default and picture|default and not jetroNoImage|default %}
+  {% if picture.sources|default %}
+    <picture>
+      {% for source in picture.sources %}
+        <source{{ attrs()
+          .set('srcset', source.srcset)
+          .setIfExists('sizes', source.sizes|default)
+          .setIfExists('media', source.media|default)
+          .setIfExists('type', source.type|default)
+          .setIfExists('width', (source.width|default and source.height|default) ? source.width : null)
+          .setIfExists('height', (source.width|default and source.height|default) ? source.height : null)
+        }}>
+      {% endfor %}
+  {% endif %}
+  <img{{ attrs()
+    .set('src', picture.img.src)
+    .set('srcset', picture.img.srcset|default, picture.img.srcset|default and picture.img.srcset != picture.img.src)
+    .setIfExists('sizes', picture.img.sizes|default)
+    .setIfExists('width', (picture.img.width|default and picture.img.height|default) ? picture.img.width : null)
+    .setIfExists('height', (picture.img.width|default and picture.img.height|default) ? picture.img.height : null)
+    .set('alt', picture.alt|default(''))
+    .setIfExists('loading', picture.img.loading|default)
+    .addClass(picture.img.class|default)
+  }}>
+  {% if picture.sources|default %}
+    </picture>
+  {% endif %}
+{% else %}
+  <div class="jetro-sheet" aria-hidden="true">
+    <span class="jetro-sheet__day">{{ jetroSheetDay|default }}</span>
+    <span class="jetro-sheet__month">{{ jetroSheetMonth|default }}</span>
+  </div>
+{% endif %}

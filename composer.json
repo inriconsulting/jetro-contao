@@ -24,19 +24,19 @@
     "require": {
         "php": "^8.2",
         "ext-fileinfo": "*",
-        "contao/calendar-bundle": "^5.3",
-        "contao/core-bundle": "^5.3",
+        "contao/calendar-bundle": "^5.3 || ^6.0",
+        "contao/core-bundle": "^5.3 || ^6.0",
         "doctrine/dbal": "^3.6 || ^4.0",
-        "symfony/config": "^6.4 || ^7.0",
-        "symfony/dependency-injection": "^6.4 || ^7.0",
-        "symfony/http-foundation": "^6.4 || ^7.0",
-        "symfony/http-kernel": "^6.4 || ^7.0",
-        "symfony/routing": "^6.4 || ^7.0",
-        "symfony/security-bundle": "^6.4 || ^7.0"
+        "symfony/config": "^6.4 || ^7.0 || ^8.0",
+        "symfony/dependency-injection": "^6.4 || ^7.0 || ^8.0",
+        "symfony/http-foundation": "^6.4 || ^7.0 || ^8.0",
+        "symfony/http-kernel": "^6.4 || ^7.0 || ^8.0",
+        "symfony/routing": "^6.4 || ^7.0 || ^8.0",
+        "symfony/security-bundle": "^6.4 || ^7.0 || ^8.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.13",
-        "phpunit/phpunit": "^10.5 || ^11.5"
+        "phpunit/phpunit": "^10.5 || ^11.5 || ^12.0"
     },
     "conflict": {
         "contao/manager-plugin": "<2.0 || >=3.0"

@@ -12,6 +12,8 @@ $GLOBALS['TL_DCA']['tl_jetro_calendar'] = [
     ],
     'list' => [
         'sorting' => ['mode' => DataContainer::MODE_PARENT, 'fields' => ['jetroKey'], 'headerFields' => ['title'], 'panelLayout' => 'search,limit'],
+        // Contao bis 5.7 beschriftet die Zeilen über child_record, ab 6.0 über label (DataContainerListener)
+        'label' => ['fields' => ['jetroKey'], 'format' => '%s'],
         'operations' => [
             'edit' => ['href' => 'act=edit', 'icon' => 'edit.svg'],
             'delete' => ['href' => 'act=delete', 'icon' => 'delete.svg', 'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '').'\'))return false"'],

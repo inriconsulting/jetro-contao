@@ -24,6 +24,15 @@ final class LayoutTest extends TestCase
         $this->assertArrayNotHasKey('imgSize', LayoutListener::fieldsFor('large', ['cal_template' => '', 'customTpl' => '', 'imgSize' => $own]));
     }
 
+    public function testJedeDarstellungHatIhreVorlagen(): void
+    {
+        foreach (LayoutListener::LAYOUTS as $layout => [$event, $module]) {
+            foreach ([$event, $module] as $template) {
+                $this->assertFileExists(__DIR__.'/../../contao/templates/'.$template.'.html.twig', $layout);
+            }
+        }
+    }
+
     public function testStandardSetztNurJetroVorlagenZurueck(): void
     {
         $this->assertSame(

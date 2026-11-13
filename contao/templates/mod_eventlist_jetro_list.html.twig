@@ -1,0 +1,11 @@
+{# Liste mit Vorschaubild. CSS meldet der EventTemplateListener an, der Rahmen entspricht block_unsearchable. #}
+{% set jetroWrapper = attrs(cssID|default).addClass([class|default, 'block']).addStyle(style|default).mergeWith(wrapperAttributes|default) %}
+<!-- indexer::stop -->
+<div{{ jetroWrapper }}>
+  {% if headline|default %}<{{ hl }}>{{ headline|insert_tag }}</{{ hl }}>{% endif %}
+  <ul class="jetro-list">
+    {{ events|raw }}
+  </ul>
+  {{ pagination|default|raw }}
+</div>
+<!-- indexer::continue -->

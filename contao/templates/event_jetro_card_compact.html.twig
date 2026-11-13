@@ -1,0 +1,9 @@
+<div class="jetro-card jetro-card--compact event{{ classList|default }}{{ class|default ? ' ' ~ class }}">
+  <a class="jetro-card__link" href="{{ href|default }}"{{ attrs(target|default) }}>
+    <div class="jetro-card__media">{{ include('@Contao/jetro_event_media.html.twig', {jetroNoImage: true}) }}</div>
+    <div class="jetro-card__body">
+      <h3 class="jetro-card__title">{{ link }}</h3>
+      <p class="jetro-card__meta"><time datetime="{{ datetime }}">{{ day|default ?: date }}</time>{% if time|default %}, {{ time }}{% endif %}</p>
+    </div>
+  </a>
+</div>

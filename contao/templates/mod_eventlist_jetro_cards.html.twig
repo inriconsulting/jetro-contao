@@ -1,0 +1,15 @@
+{# Slider mit Karten. CSS und JS meldet der EventTemplateListener an, der Rahmen entspricht block_unsearchable. #}
+{% set jetroWrapper = attrs(cssID|default).addClass([class|default, 'block']).addStyle(style|default).mergeWith(wrapperAttributes|default) %}
+<!-- indexer::stop -->
+<div{{ jetroWrapper }}>
+  {% if headline|default %}<{{ hl }}>{{ headline|insert_tag }}</{{ hl }}>{% endif %}
+  <div class="jetro-cards">
+    <button type="button" class="jetro-cards__nav jetro-cards__nav--prev" aria-label="{{ 'MSC.jetro_cards_prev'|trans([], 'contao_default') }}" hidden>&#8249;</button>
+    <div class="jetro-cards__track" tabindex="0" aria-label="{{ 'MSC.jetro_cards_label'|trans([], 'contao_default') }}">
+      {{ events|raw }}
+    </div>
+    <button type="button" class="jetro-cards__nav jetro-cards__nav--next" aria-label="{{ 'MSC.jetro_cards_next'|trans([], 'contao_default') }}" hidden>&#8250;</button>
+  </div>
+  {{ pagination|default|raw }}
+</div>
+<!-- indexer::continue -->

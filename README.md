@@ -5,7 +5,7 @@ server-zu-server in die Website: anlegen, ändern, absagen, künftige löschen, 
 Livestream- und Anmeldelink. Die Redaktion in Contao behält alles, was Jetro nicht liefert
 (Veröffentlichung, Hervorheben, Buchungen, weitere Inhaltselemente).
 
-- Contao ab 5.3, PHP ab 8.2
+- Contao 5.3 bis 6.0, PHP ab 8.2 (Contao 6 verlangt PHP 8.4)
 - nur Kern-Felder von `tl_calendar_events`, keine weiteren Erweiterungen nötig
 - Lizenz MIT
 
@@ -41,9 +41,13 @@ Die Seite **Protokoll** zeigt die letzten 50 Anfragen von Jetro (Zeit, Pfad, Sta
 | Absage | Termin bleibt sichtbar und zeigt „Abgesagt“ in Liste und Leseansicht |
 | Löschen | nur künftige Termine; mit Buchungen nur unveröffentlicht; vergangene bleiben als Archiv |
 | Bilder | PNG, JPEG, WebP bis 2 MB unter `files/jetro/` |
-| Texte | werden wie Backend-Eingaben kodiert, Links nur `http`/`https` |
+| Texte | werden wie Backend-Eingaben behandelt, Links nur `http`/`https` |
 
 Hoster, die den Kopf `Authorization` streichen, sind kein Problem: Jetro sendet das Token zusätzlich in `X-Jetro-Token`.
+
+Texte aus Jetro erscheinen auf der Website immer als Text, nie als HTML oder Insert-Tag. Bis Contao 5.7 kodiert das
+Paket sie dafür beim Speichern, unter Contao 6 speichert es sie wie Contao selbst roh und überlässt das Kodieren der
+Ausgabe — der Umstieg von 5 auf 6 braucht nichts weiter als Contaos eigene Datenbank-Migration.
 
 ## Entwicklung
 
@@ -52,9 +56,17 @@ docker build -t jetro-contao-test -f docker/test.Dockerfile docker
 docker run --rm -v "$PWD":/app jetro-contao-test sh -c 'composer install && vendor/bin/phpunit'
 ```
 
-Integrationstest gegen ein echtes Contao mit MySQL (installiert das Paket, startet einen Webserver und prüft den
-Vertrag über HTTP): `CONTAO='5.7.*' DATABASE_URL=mysql://… tests/Integration/run.sh`. Die CI führt ihn für
-Contao 5.3 und 5.7 aus. Die Vertrags-Fixtures unter `tests/Fixtures/jetro/` stammen unverändert aus Jetro.
+Eine andere Contao-Version prüfen (für 5.3 das Abbild mit `--build-arg PHP=8.2` bauen):
+
+```bash
+docker run --rm -v "$PWD":/app jetro-contao-test sh -c \
+  'composer require --no-update contao/core-bundle:5.7.* contao/calendar-bundle:5.7.* && composer update && vendor/bin/phpunit'
+```
+
+Integrationstest gegen ein echtes Contao mit MySQL: `CONTAO='6.0.*' DATABASE_URL=mysql://… tests/Integration/run.sh`
+installiert das Paket, startet einen Webserver und prüft nacheinander den Vertrag über HTTP (`smoke.php`), die vier
+Darstellungen auf einer echten Seite (`frontend.php`) und das Backend „Jetro“ samt Token (`backend.php`). Die CI führt
+ihn für Contao 5.3, 5.7 und 6.0 aus. Die Vertrags-Fixtures unter `tests/Fixtures/jetro/` stammen unverändert aus Jetro.
 
 Der Vertrag zwischen Jetro und diesem Paket steht in der Jetro-Spezifikation `website-contao.md`
 (Abschnitt „Vertrag Jetro → Paket (api 1)“). Abweichungen nur über eine Änderung dort.
@@ -103,6 +115,8 @@ Farben passen sich über CSS-Variablen an das eigene Design an, z. B.:
 Weitere Variablen: `--jetro-sheet-text`, `--jetro-card-bg`, `--jetro-text`, `--jetro-muted`, `--jetro-card-width`,
 `--jetro-card-width-large`, `--jetro-card-width-compact`. Abgesagte Termine tragen die Klasse `jetro-cancelled`
 und erscheinen ausgegraut mit „Abgesagt:“ vor dem Titel.
+
+Die Vorlagen liegen als Twig-Dateien (`.html.twig`) im Paket und werden von Contao 5.3 bis 6.0 gleich gerendert.
 
 Manche Themes bringen für die Leseansicht eine eigene Vorlage mit, die Titel und Bild nur in einem zusätzlichen
 Kopfbereich zeigt. Erscheinen Termine mit Bild dort ohne Überschrift, das Lesemodul auf die Kern-Vorlage

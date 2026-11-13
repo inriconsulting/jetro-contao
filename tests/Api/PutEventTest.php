@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace JetroTools\ContaoBundle\Tests\Api;
 
+use JetroTools\ContaoBundle\Api\TextEncoder;
+
 final class PutEventTest extends ApiTestCase
 {
     public function testV2LegtTerminAnMitKernFeldern(): void
@@ -72,7 +74,16 @@ final class PutEventTest extends ApiTestCase
 
     public function testTitelDerKodiertZuLangWird422(): void
     {
-        $response = $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['title' => str_repeat('a', 254).'#']));
+        $title = str_repeat('a', 254).'#';
+        $response = $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['title' => $title]));
+
+        if (TextEncoder::storesRawText()) {
+            // Contao 6 kodiert nicht beim Speichern, 255 Zeichen passen in die Spalte
+            $this->assertSame(201, $response->getStatusCode());
+            $this->assertSame($title, $this->event()['title']);
+
+            return;
+        }
 
         $this->assertError($response, 422, 'validation');
         $this->assertSame('title', $this->json($response)['field']);
@@ -156,10 +167,18 @@ final class PutEventTest extends ApiTestCase
         ]));
 
         $row = $this->event();
-        $this->assertStringNotContainsString('<script>', $row['title']);
         $this->assertStringNotContainsString('{{', $row['title']);
-        $this->assertStringContainsString('&#60;script&#62;', $row['title'], 'wie Input::encodeInput(encodeAll)');
         $this->assertStringNotContainsString('<b>', $row['teaser']);
+
+        if (TextEncoder::storesRawText()) {
+            // Contao 6 speichert roh und kodiert erst Twig; die Klammern bleiben als [{] stehen
+            $this->assertSame('<script>alert(1)</script> [{]date[}]', $row['title']);
+
+            return;
+        }
+
+        $this->assertStringNotContainsString('<script>', $row['title']);
+        $this->assertStringContainsString('&#60;script&#62;', $row['title'], 'wie Input::encodeInput(encodeAll)');
     }
 
     public function testSimpleTokensUndKlammernWieImBackend(): void
@@ -167,7 +186,10 @@ final class PutEventTest extends ApiTestCase
         $this->call('PUT', '/events/'.self::EVENT_ID, $this->fixture(['title' => '##member_email## (a) = b \\', 'description' => '##member_email##']));
 
         $row = $this->event();
-        $this->assertSame('&#35;&#35;member_email&#35;&#35; &#40;a&#41; &#61; b &#92;', $row['title']);
+        $this->assertSame(
+            TextEncoder::storesRawText() ? '##member_email## (a) = b \\' : '&#35;&#35;member_email&#35;&#35; &#40;a&#41; &#61; b &#92;',
+            $row['title'],
+        );
         $this->assertStringNotContainsString('##', $row['teaser']);
     }
 

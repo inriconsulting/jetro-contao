@@ -37,6 +37,8 @@ $request = static function (string $method, string $path, array|null $body = nul
 };
 
 $fixture = static fn (string $name): array => json_decode((string) file_get_contents(__DIR__.'/../Fixtures/jetro/'.$name.'.json'), true, 512, JSON_THROW_ON_ERROR);
+// Ab Contao 6 speichert Contao Eingaben roh und kodiert erst bei der Ausgabe (siehe TextEncoder)
+$contao = (int) (require $app.'/vendor/composer/installed.php')['versions']['contao/core-bundle']['pretty_version'];
 $eventId = '0192f3a4-5b6c-7d8e-9f01-23456789abcd';
 $event = $fixture('v2-event');
 
@@ -62,8 +64,15 @@ $check(str_contains((string) $row['teaser'], 'jetro-signup'), 'Anmeldelink mit B
 [$status] = $request('PUT', '/events/0192f3a4-5b6c-7d8e-9f01-000000000001', ['title' => str_repeat('Wort ', 51)] + $event);
 $check(201 === $status, 'langer Titel: Alias passt in die Spalte');
 
-[$status, , $body] = $request('PUT', '/events/0192f3a4-5b6c-7d8e-9f01-000000000002', ['title' => str_repeat('a', 254).'#'] + $event);
-$check(422 === $status && 'title' === ($body['field'] ?? null), 'kodiert zu langer Titel: 422 statt 500');
+$longTitle = str_repeat('a', 254).'#';
+[$status, , $body] = $request('PUT', '/events/0192f3a4-5b6c-7d8e-9f01-000000000002', ['title' => $longTitle] + $event);
+
+if ($contao >= 6) {
+    $stored = $pdo->query("SELECT title FROM tl_calendar_events WHERE jetroId = '0192f3a4-5b6c-7d8e-9f01-000000000002'")->fetchColumn();
+    $check(201 === $status && $longTitle === $stored, 'roher Titel mit 255 Zeichen passt in die Spalte');
+} else {
+    $check(422 === $status && 'title' === ($body['field'] ?? null), 'kodiert zu langer Titel: 422 statt 500');
+}
 
 foreach (['title', 'location', 'address', 'alias'] as $column) {
     $length = (int) $pdo->query("SELECT CHARACTER_MAXIMUM_LENGTH FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'tl_calendar_events' AND COLUMN_NAME = '$column'")->fetchColumn();

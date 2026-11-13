@@ -1,0 +1,10 @@
+<li class="jetro-list__item event{{ classList|default }}{{ class|default ? ' ' ~ class }}">
+  <a class="jetro-list__link" href="{{ href|default }}"{{ attrs(target|default) }}>
+    <div class="jetro-list__media">{{ include('@Contao/jetro_event_media.html.twig') }}</div>
+    <div class="jetro-list__body">
+      <h3 class="jetro-list__title">{{ link }}</h3>
+      <p class="jetro-list__meta"><time datetime="{{ datetime }}">{% if day|default %}{{ day }}, {% endif %}{{ date }}</time>{% if time|default %}, {{ time }}{% endif %}</p>
+      {% if location|default %}<p class="jetro-list__meta">{{ location }}{% if address|default %}, {{ address }}{% endif %}</p>{% endif %}
+    </div>
+  </a>
+</li>

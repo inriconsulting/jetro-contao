@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 final class JetroToolsContaoBundle extends Bundle
 {
     /** Wird bei jedem Release angehoben; Jetro prüft die Mindestversion (R3) */
-    public const VERSION = '1.0.2';
+    public const VERSION = '1.1.0';
 
     public function getPath(): string
     {
